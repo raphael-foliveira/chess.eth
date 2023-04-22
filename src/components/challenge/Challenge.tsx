@@ -5,7 +5,9 @@ export default function Challenge({ userName }: { userName: string }) {
     <div className={styles.challengeContainer}>
       <h3>Challenge {userName}</h3>
 
-      <button>CHALLENGE</button>
+      <a href="https://lichess.org/u9GSkAnF" target="_blank">
+        <button>CHALLENGE</button>
+      </a>
     </div>
   );
 }

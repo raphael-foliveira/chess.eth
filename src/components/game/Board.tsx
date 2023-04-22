@@ -1,29 +1,49 @@
+import React, { useEffect, useState } from "react";
 import { Chess } from "chess.js";
-import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { lichessAPI } from "../../services/lichessAPI";
 import styles from "./Board.module.css";
 
-export default function Board() {
+interface BoardProps {
+  gameId: string;
+}
+
+interface ResponseGameStreamLiChess {
+  rated: boolean;
+  white: {
+    name: string;
+    rating: string;
+  };
+  black: {
+    name: string;
+    rating: string;
+  };
+  state: {
+    moves: string;
+    status: "created" | "started" | "aborted" | "mate" | "resign" | "stalemate" | "timeout" | "draw" | "outoftime" | "cheat" | "noStart" | "unknownFinish" | "variantEnd";
+    winner?: 'black' | 'white';
+  }
+}
+
+const Board: React.FC<BoardProps> = (props) => {
   const [gameRaw, setGameRaw] = useState(new Chess().fen());
   const [moves, setMoves] = useState([] as string[]);
   const [currentPlay, setCurrentPlay] = useState(-1); // -1 to current, 0 to start, n to n move
   const [loaded, setLoaded] = useState(false);
+  const [gameData, setGameData] = useState({} as ResponseGameStreamLiChess);
 
   const fetchData = async () => {
-    const response = await lichessAPI.get("/board/game/stream/FRIZ2S2r4RVO");
+    const response = await lichessAPI.get<ResponseGameStreamLiChess|string>(`/board/game/stream/${props.gameId}4RVO`); // for any god reason, only works with 4RVO at the end
 
-    try {
-      const data = response.data;
-      if (typeof data == "object") {
-        setMoves(data?.state?.moves.split(" "));
-      } else if (typeof data == "string") {
-        console.log("passed By string type");
-        const data = JSON.parse(response.data.split("\n")[0]);
-        setMoves(data?.state?.moves.split(" "));
-      }
-    } catch (e) {
-      console.log("error", e);
+    const data = response.data;
+    if (typeof data == "object") {
+      setMoves(data?.state?.moves.split(" "));
+      setGameData(data);
+    } else if (typeof data == "string") {
+      console.log("passed By string type");
+      const data = JSON.parse(String(response.data).split("\n")[0]);
+      setMoves(data?.state?.moves.split(" "));
+      setGameData(data);
     }
 
     if (!loaded) setLoaded(true);
@@ -32,6 +52,14 @@ export default function Board() {
       fetchData();
     }, 2000);
   };
+
+  const checkThereareNotWinnersOrDraw = () => {
+    const nonValidsStates = ["created", "started", "mate", "resign", "draw"];
+
+    if (!gameData.state.winner && !nonValidsStates.includes(gameData.state.status)) return true;
+
+    return false;
+  }
 
   const changeCurrentPlay = (newValue: number) => {
     setCurrentPlay(newValue);
@@ -81,13 +109,40 @@ export default function Board() {
     <>
       {loaded && (
         <div className={styles.chessboardContainer}>
-          <Chessboard
-            id="BasicBoard"
-            position={gameRaw}
-            animationDuration={400}
-            arePiecesDraggable={false}
-            boardWidth={350}
-          />
+          <div className={styles.userData}>
+              <strong>{gameData.black.name} (black)</strong>
+              <span>Rating: {gameData.black.rating}</span>
+          </div>
+          <div className={styles.chessboardArea}>
+            {gameData.state.winner && currentPlay === -1 && (
+              <strong className={styles.winner}>
+                {gameData[gameData.state.winner].name} wins!
+              </strong>
+            )}
+
+            {gameData.state.status === 'draw' && currentPlay === -1 && (
+              <strong className={styles.winner}>
+                Draw!
+              </strong>
+            )}
+
+            {checkThereareNotWinnersOrDraw() && currentPlay === -1 && (
+              <strong className={styles.winner}>
+                No winner!
+              </strong>
+            )}
+            <Chessboard
+              id="BasicBoard"
+              position={gameRaw}
+              animationDuration={400}
+              arePiecesDraggable={false}
+              boardWidth={350}
+            />
+          </div>
+          <div className={styles.userData}>
+              <strong>{gameData.white.name} (white)</strong>
+              <span>Rating: {gameData.white.rating}</span>
+          </div>
         </div>
       )}
       <div className={styles.buttons}>
@@ -99,3 +154,5 @@ export default function Board() {
     </>
   );
 }
+
+export default Board;

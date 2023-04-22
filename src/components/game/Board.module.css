@@ -17,4 +17,38 @@
   color: #4caf50; /* Green */
   text-decoration: none;
   border-radius: 100%;
+  cursor: pointer;
+}
+.userData {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.userData strong {
+  font-size: 20px;
+}
+
+.userData span {
+  color: #4caf50;
+}
+
+.chessboardArea {
+  position: relative;
+}
+
+.winner {
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  transform: translateX(50%) translateY(50%);
+  font-size: 24px; 
+  z-index: 90;
+  color: white;
+  text-align: center;
+  background-color: rgba(0, 0, 0, .5);
+  padding: 10px;
+  width: 100%;
+  max-width: 240px;
 }

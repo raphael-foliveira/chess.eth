@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,9 +22,12 @@ function App() {
         alignItems: "center",
       }}
     >
-        <ToastContainer />
+      <ToastContainer />
       <Challenge getUser={getUser} />
-      {user !== undefined && <Board />}
+      {
+        // user !== undefined && 
+        <Board gameId="FRIZ2S2r" />
+      }
     </div>
   );
 }

@@ -4,44 +4,51 @@ import { Chessboard } from "react-chessboard";
 import { lichessAPI } from "../../services/lichessAPI";
 
 export default function Board() {
-  const initGame = new Chess();
-  const [game, setGame] = useState(initGame);
-  const [gameRaw, setGameRaw] = useState(initGame.fen());
+  const [gameRaw, setGameRaw] = useState((new Chess()).fen());
+  const [moves, setMoves] = useState([] as string[]);
+  const [currentPlay, setCurrentPlay] = useState(-1); // -1 to current, 0 to start, n to n move
+  const [loaded, setLoaded] = useState(false);
 
   const fetchData = async () => {
-    const response = await lichessAPI.get('/board/game/stream/50LUOnK3zZN74RVO');
+    const response = await lichessAPI.get('/board/game/stream/FRIZ2S2r4RVO');
 
-    // if (response.)
     try  {
       const data = response.data;
       if (typeof(data) == "object") {
-        const movesArray: string[] = data?.state?.moves.split(" ");
-    
-        const gameCopy = new Chess();
-    
-        for (const move of movesArray) {
-          gameCopy.move(move);
-        }
-        setGame(gameCopy);
+        setMoves(data?.state?.moves.split(" "));
       } else if (typeof(data) == "string") {
         console.log('passed By string type');
         const data = JSON.parse(response.data.split('\n')[0]);
-        const movesArray: string[] = data?.state?.moves.split(" ");
-    
-        const gameCopy = new Chess();
-    
-        for (const move of movesArray) {
-          gameCopy.move(move);
-        }
-        setGame(gameCopy);
+        setMoves(data?.state?.moves.split(" "));        
       }
     } catch (e) {
       console.log('error', e)
-    } 
+    }
+
+    if (!loaded) setLoaded(true);
 
     setTimeout(() => {
       fetchData();
     }, 2000);
+  };
+
+  const changeCurrentPlay = (newValue: number) => {
+    setCurrentPlay(newValue);
+  }
+
+  const previousMove = () => {
+    if (currentPlay == 0) return;
+    if (currentPlay < 0) return changeCurrentPlay(moves.length - 1);
+    if (currentPlay > 0 && currentPlay <= moves.length) return changeCurrentPlay(currentPlay - 1);
+    changeCurrentPlay(moves.length - 1);
+  };
+
+  const nextMove = () => {
+    if (currentPlay < 0) return;
+    if (currentPlay + 1 >= moves.length) return changeCurrentPlay(-1);
+    if (currentPlay >= 0) return changeCurrentPlay(currentPlay + 1);
+
+    changeCurrentPlay(-1);
   };
 
   useEffect(() => {
@@ -49,17 +56,41 @@ export default function Board() {
   }, []);
 
   useEffect(() => {
-    setGameRaw(game.fen());
-  }, [game]);
+    if (currentPlay == -1 || currentPlay >= moves.length) {
+      const gameCopy = new Chess();
+    
+      for (const move of moves) {
+        gameCopy.move(move);
+      }
+
+      setGameRaw(gameCopy.fen());
+    } else {
+      const gameCopy = new Chess();
+
+      for (let i = 0; i < currentPlay; i++) {
+        gameCopy.move(moves[i]);
+      }
+
+      setGameRaw(gameCopy.fen());
+    }
+  }, [moves, currentPlay]);
 
   return (
-    <div id="BoardContainer">
-      <Chessboard
-        id="BasicBoard"
-        position={gameRaw}
-        animationDuration={400}
-        arePiecesDraggable={false}
-      />
-    </div>
+    <>
+      <div id="BoardContainer">
+        {loaded && <Chessboard
+          id="BasicBoard"
+          position={gameRaw}
+          animationDuration={400}
+          arePiecesDraggable={false}
+        />}        
+      </div>
+      <div className="buttons-area">
+        <button onClick={() => changeCurrentPlay(0)}>Start</button>
+        <button onClick={previousMove}>Previous</button>
+        <button onClick={nextMove}>Next</button>
+        <button onClick={() => changeCurrentPlay(-1)}>End</button>
+      </div>
+    </>
   );
 }

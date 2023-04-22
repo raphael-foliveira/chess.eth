@@ -1,10 +1,16 @@
 import { useState } from "react";
 import "./App.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Challenge from "./components/challenge/Challenge";
+
 import Board from "./components/game/Board";
 
 function App() {
-  const [username, setUsername] = useState('TeamWinner')
+  const [user, setUser] = useState(undefined);
+  const getUser =  (user: any) => {
+    setUser(user)
+  }
   return (
     <div
       style={{
@@ -16,8 +22,9 @@ function App() {
         alignItems: "center",
       }}
     >
-      <Challenge userName={username} />
-      <Board />
+        <ToastContainer />
+      <Challenge getUser={getUser} />
+      {user !== undefined && <Board />}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Chess } from "chess.js";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 
 export default function Board() {
@@ -30,7 +30,7 @@ export default function Board() {
   };
 
   useEffect(() => {
-    fetchData();
+    setInterval(fetchData, 5000);
   }, []);
 
   return (
@@ -38,7 +38,7 @@ export default function Board() {
       <Chessboard
         id="BasicBoard"
         position={game.fen()}
-        animationDuration={200}
+        animationDuration={0}
         arePiecesDraggable={false}
       />
     </div>

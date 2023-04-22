@@ -91,10 +91,10 @@ export default function Board() {
         </div>
       )}
       <div className="buttons-area">
-        <button onClick={() => changeCurrentPlay(0)}>Start</button>
-        <button onClick={previousMove}>Previous</button>
-        <button onClick={nextMove}>Next</button>
-        <button onClick={() => changeCurrentPlay(-1)}>End</button>
+        <button onClick={() => changeCurrentPlay(0)}>|&lt;&lt;</button>
+        <button onClick={previousMove}>&lt;</button>
+        <button onClick={nextMove}>&gt;</button>
+        <button onClick={() => changeCurrentPlay(-1)}>&gt;&gt;|</button>
       </div>
     </>
   );

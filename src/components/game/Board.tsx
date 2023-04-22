@@ -86,6 +86,7 @@ export default function Board() {
             position={gameRaw}
             animationDuration={400}
             arePiecesDraggable={false}
+            boardWidth={350}
           />
         </div>
       )}

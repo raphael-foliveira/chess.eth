@@ -1,8 +1,10 @@
+import { useState } from "react";
 import "./App.css";
 import Challenge from "./components/challenge/Challenge";
 import Board from "./components/game/Board";
 
 function App() {
+  const [username, setUsername] = useState('TeamWinner')
   return (
     <div
       style={{
@@ -14,7 +16,7 @@ function App() {
         alignItems: "center",
       }}
     >
-      <Challenge userName="Sashi" />
+      <Challenge userName={username} />
       <Board />
     </div>
   );

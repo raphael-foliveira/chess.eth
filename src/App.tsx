@@ -10,6 +10,7 @@ function App() {
         justifyContent: "center",
         flexDirection: "column",
         width: "100%",
+        height: "100vh",
         alignItems: "center",
       }}
     >

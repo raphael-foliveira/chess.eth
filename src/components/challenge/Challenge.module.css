@@ -1,5 +1,7 @@
 .challengeContainer {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -19,4 +21,13 @@
 .challengeContainer h3 {
   width: 100%;
   text-align: center;
+}
+
+.challengeFormContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
 }

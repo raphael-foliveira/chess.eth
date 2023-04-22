@@ -6,11 +6,6 @@ export default function Board() {
   const initGame = new Chess();
   const [game, setGame] = useState(initGame);
 
-  const movePiece = (move: string) => {
-    const gameCopy = new Chess(game.fen());
-    gameCopy.move(move);
-    setGame(gameCopy);
-  };
   const fetchData = async () => {
     const response = await fetch(
       "https://lichess.org/api/board/game/stream/izOTDUBw4Rvo",
@@ -23,14 +18,24 @@ export default function Board() {
     );
     console.log("running function");
     const data = await response.json();
+    console.log("running function 2");
     const movesArray: string[] = data.state.moves.split(" ");
-    movesArray.forEach((move) => {
-      movePiece(move);
-    });
+    console.log(movesArray);
+
+    const gameCopy = new Chess(game.fen());
+
+    for (const move of movesArray) {
+      gameCopy.move(move);
+    }
+    setGame(gameCopy);
+
+    setTimeout(() => {
+      fetchData();
+    }, 5000);
   };
 
   useEffect(() => {
-    setInterval(fetchData, 5000);
+    fetchData();
   }, []);
 
   return (

@@ -1,3 +1,20 @@
 .chessboardContainer {
   margin-top: 2em;
 }
+.buttons {
+  margin-top: 20px;
+  width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.button {
+  background-color: transparent;
+  width: 87.5px;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  color: #4caf50; /* Green */
+  text-decoration: none;
+  border-radius: 100%;
+}

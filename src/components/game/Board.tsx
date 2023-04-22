@@ -90,11 +90,11 @@ export default function Board() {
           />
         </div>
       )}
-      <div className="buttons-area">
-        <button onClick={() => changeCurrentPlay(0)}>|&lt;&lt;</button>
-        <button onClick={previousMove}>&lt;</button>
-        <button onClick={nextMove}>&gt;</button>
-        <button onClick={() => changeCurrentPlay(-1)}>&gt;&gt;|</button>
+      <div className={styles.buttons}>
+        <button className={styles.button} onClick={() => changeCurrentPlay(0)}>&lt;&lt;</button>
+        <button className={styles.button} onClick={previousMove}>&lt;</button>
+        <button className={styles.button} onClick={nextMove}>&gt;</button>
+        <button className={styles.button} onClick={() => changeCurrentPlay(-1)}>&gt;&gt;</button>
       </div>
     </>
   );

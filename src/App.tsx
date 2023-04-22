@@ -4,10 +4,18 @@ import Board from "./components/game/Board";
 
 function App() {
   return (
-    <>
-      {/* <Challenge userName="Sashi" /> */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+        width: "100%",
+        alignItems: "center",
+      }}
+    >
+      <Challenge userName="Sashi" />
       <Board />
-    </>
+    </div>
   );
 }
 

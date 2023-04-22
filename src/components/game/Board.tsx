@@ -2,27 +2,28 @@ import { Chess } from "chess.js";
 import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { lichessAPI } from "../../services/lichessAPI";
+import styles from "./Board.module.css";
 
 export default function Board() {
-  const [gameRaw, setGameRaw] = useState((new Chess()).fen());
+  const [gameRaw, setGameRaw] = useState(new Chess().fen());
   const [moves, setMoves] = useState([] as string[]);
   const [currentPlay, setCurrentPlay] = useState(-1); // -1 to current, 0 to start, n to n move
   const [loaded, setLoaded] = useState(false);
 
   const fetchData = async () => {
-    const response = await lichessAPI.get('/board/game/stream/FRIZ2S2r4RVO');
+    const response = await lichessAPI.get("/board/game/stream/FRIZ2S2r4RVO");
 
-    try  {
+    try {
       const data = response.data;
-      if (typeof(data) == "object") {
+      if (typeof data == "object") {
         setMoves(data?.state?.moves.split(" "));
-      } else if (typeof(data) == "string") {
-        console.log('passed By string type');
-        const data = JSON.parse(response.data.split('\n')[0]);
-        setMoves(data?.state?.moves.split(" "));        
+      } else if (typeof data == "string") {
+        console.log("passed By string type");
+        const data = JSON.parse(response.data.split("\n")[0]);
+        setMoves(data?.state?.moves.split(" "));
       }
     } catch (e) {
-      console.log('error', e)
+      console.log("error", e);
     }
 
     if (!loaded) setLoaded(true);
@@ -34,12 +35,13 @@ export default function Board() {
 
   const changeCurrentPlay = (newValue: number) => {
     setCurrentPlay(newValue);
-  }
+  };
 
   const previousMove = () => {
     if (currentPlay == 0) return;
     if (currentPlay < 0) return changeCurrentPlay(moves.length - 1);
-    if (currentPlay > 0 && currentPlay <= moves.length) return changeCurrentPlay(currentPlay - 1);
+    if (currentPlay > 0 && currentPlay <= moves.length)
+      return changeCurrentPlay(currentPlay - 1);
     changeCurrentPlay(moves.length - 1);
   };
 
@@ -58,7 +60,7 @@ export default function Board() {
   useEffect(() => {
     if (currentPlay == -1 || currentPlay >= moves.length) {
       const gameCopy = new Chess();
-    
+
       for (const move of moves) {
         gameCopy.move(move);
       }
@@ -77,14 +79,17 @@ export default function Board() {
 
   return (
     <>
-      <div id="BoardContainer">
-        {loaded && <Chessboard
-          id="BasicBoard"
-          position={gameRaw}
-          animationDuration={400}
-          arePiecesDraggable={false}
-        />}        
-      </div>
+      {loaded && (
+        <div className={styles.chessboardContainer}>
+          <Chessboard
+            id="BasicBoard"
+            position={gameRaw}
+            animationDuration={400}
+            arePiecesDraggable={false}
+            boardWidth={500}
+          />
+        </div>
+      )}
       <div className="buttons-area">
         <button onClick={() => changeCurrentPlay(0)}>Start</button>
         <button onClick={previousMove}>Previous</button>

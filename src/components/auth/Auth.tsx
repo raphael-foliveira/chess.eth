@@ -5,7 +5,10 @@ import styles from "./Auth.module.css";
 import { canAuthenticate } from "./validations";
 import { toast } from "react-toastify";
 
-export const Auth = () => {
+interface AuthProps {
+  setAuth: () => void
+}
+export const Auth = ({setAuth}: AuthProps) => {
   const { isLoading, signIn } = useAuth();
 
   const [token, setToken] = useState("");
@@ -19,6 +22,7 @@ export const Auth = () => {
         token,
         email,
       });
+      setAuth()
     } catch (error) {
       toast.error("Invalid credentials", {
         position: "top-right",
@@ -59,7 +63,7 @@ export const Auth = () => {
           />
         </div>
 
-        <button>{isLoading ? "..." : "Entrar"}</button>
+        <button>{isLoading ? "..." : "Join"}</button>
       </form>
     </div>
   );

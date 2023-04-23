@@ -1,3 +1,21 @@
 #BoardContainer {
   max-width: 500px;
 }
+
+.appButton {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+width : fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  cursor: pointer;
+
+  margin-top: 20px;
+}

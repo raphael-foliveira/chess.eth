@@ -33,7 +33,7 @@ const Board: React.FC<BoardProps> = (props) => {
   const [gameData, setGameData] = useState({} as ResponseGameStreamLiChess);
 
   const fetchData = async () => {
-    const response = await lichessAPI.get<ResponseGameStreamLiChess|string>(`/board/game/stream/${props.gameId}4RVO`); // for any god reason, only works with 4RVO at the end
+    const response = await lichessAPI.get<ResponseGameStreamLiChess|string>(`/board/game/stream/${props.gameId}`); // for any god reason, only works with 4RVO at the end
 
     const data = response.data;
     if (typeof data == "object") {

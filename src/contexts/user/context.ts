@@ -5,6 +5,7 @@ interface UserContextProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
   isLogged: boolean;
+  logout: () => void;
   setIsLogged: Dispatch<SetStateAction<boolean>>;
 }
 

@@ -23,7 +23,9 @@ export default function Challenge({ gameId }: ChallengeProps) {
 
       setChallenge(data);
 
-      toast.error("Challenge created, enjoy!", {
+      window.open(`https://lichess.org/${gameId}`);
+
+      toast.success("Challenge created, enjoy!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

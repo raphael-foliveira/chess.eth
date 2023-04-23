@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import { ToastContainer } from "react-toastify";
 import "./App.css";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import Challenge from "./components/challenge/Challenge";
 
 import Board from "./components/game/Board";
+import { useUser } from "./hooks/useUser";
+import { Auth } from "./components/auth/Auth";
 
 function App() {
-  const [user, setUser] = useState(undefined);
-  const getUser =  (user: any) => {
-    setUser(user)
-  }
+  const { isLogged } = useUser();
+
   return (
     <div
       style={{
@@ -23,11 +22,14 @@ function App() {
       }}
     >
       <ToastContainer />
-      <Challenge getUser={getUser} />
-      {
-        // user !== undefined && 
-        <Board gameId="FRIZ2S2r" />
-      }
+      {isLogged ? (
+        <>
+          <Board gameId={"FRIZ2S2r"} />
+          <Challenge />
+        </>
+      ) : (
+        <Auth />
+      )}
     </div>
   );
 }

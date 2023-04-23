@@ -1,11 +1,37 @@
+import { toast } from "react-toastify";
+import { api } from "../../services/api";
 import styles from "./Challenge.module.css";
 
-export default function Challenge({ userName }: { userName: string }) {
+interface ChallengeProps {
+  opponentId: string;
+  gameId: string;
+}
+export default function Challenge({opponentId, gameId}: ChallengeProps) {
+  const createChallenge = async () => {
+    try {
+      const parsedData = {
+        opponentId,
+        gameId
+      }
+      console.log('parsedData', parsedData)
+    //  api.post(, parsedData)
+    } catch (err) {
+      toast.error("Try again!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+  }
   return (
-    <div className={styles.centralize}>
-      <h3>Challenge {userName}</h3>
-
-      <button>CHALLENGE</button>
+    <div className={styles.challengeContainer}>
+      <button type="button" onClick={createChallenge}>CHALLENGE ME!</button>
     </div>
   );
 }

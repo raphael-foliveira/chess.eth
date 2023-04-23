@@ -4,9 +4,10 @@ import { toast } from "react-toastify";
 import { CreateSessionDTO } from "./DTOs/CreateSessionDTO";
 import { api } from "../../services/api";
 import { useState } from "react";
+import { lichessAPI } from "../../services/lichessAPI";
 
 export function useAuth() {
-  const { setUser, setIsLogged } = useUser();
+  const { setUser, setIsLogged, setOpponent } = useUser();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,9 +59,38 @@ export function useAuth() {
     }
   };
 
+  const signInOponnet = async () => {
+    try {
+      const { user, access_token } = await createSession({
+        email: "luizpedrosousa64@gmail.com",
+        token: "lip_O5EbulGMnYWEBbgt1FVS",
+      });
+
+      api.defaults.headers.Authorization = `Bearer ${access_token}`;
+
+      const response = await getUser(user?.id);
+
+      Cookies.set("opponent_access_token", access_token);
+      Cookies.set("opponent_user_id", user?.id);
+      setOpponent(response);
+    } catch (error) {
+      toast.error("Can't get opponent data", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return {
     logout,
     isLoading,
+    signInOponnet,
     signIn,
   };
 }

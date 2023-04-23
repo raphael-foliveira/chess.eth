@@ -6,21 +6,33 @@ import Challenge from "./components/challenge/Challenge";
 import Board from "./components/game/Board";
 import { useUser } from "./hooks/useUser";
 import { Auth } from "./components/auth/Auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createSession, useAuth } from "./hooks/useAuth";
 
 function App() {
-  const { isLogged, logout } = useUser();
-  const [gameId, setGameId] = useState<string>("");
-  const [isAuth, setIsAuth] = useState<boolean>(false)
+  const { logout, signInOponnet } = useAuth();
+  const { isLogged } = useUser();
+  const [gameId, setGameId] = useState<string>("DQ74QL3p");
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+
+  useEffect(() => {
+    signInOponnet();
+
+    //lip_sbywVZGnBYMbA4SFfZTl
+  }, []);
+
   const setAuth = () => {
-setIsAuth(true)
-  }
+    setIsAuth(true);
+  };
+
   const comeback = () => {
-    setIsAuth(false)
-  }
+    setIsAuth(false);
+  };
+
   const goAuth = () => {
-    setIsAuth(true)
-  }
+    setIsAuth(true);
+  };
+
   return (
     <div
       style={{
@@ -35,25 +47,29 @@ setIsAuth(true)
       <ToastContainer />
       {isLogged ? (
         <>
-          <button className="appButton" onClick={logout}>Logout</button>
-          <Challenge opponentId="dundas" gameId="izOTDUBw4Rvo" />
+          <button className="appButton" onClick={logout}>
+            Logout
+          </button>
+          <Challenge gameId={gameId} />
           <Board gameId={gameId} />
         </>
       ) : (
         <>
-           {isAuth ?
-         (
-          <>
-          <button className="appButton" onClick={comeback}>Comeback</button>
-          <Auth setAuth={setAuth} />
-          </>
-         ) : (
-          <>
-          <button className="appButton" onClick={goAuth}>Go Auth</button>
-          <Board gameId={"FRIZ2S2r"} />
-          </>
-         )
-        }
+          {isAuth ? (
+            <>
+              <button className="appButton" onClick={comeback}>
+                Comeback
+              </button>
+              <Auth setAuth={setAuth} />
+            </>
+          ) : (
+            <>
+              <button className="appButton" onClick={goAuth}>
+                Go Auth
+              </button>
+              <Board gameId={gameId} />
+            </>
+          )}
         </>
       )}
     </div>

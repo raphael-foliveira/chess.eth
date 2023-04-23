@@ -20,9 +20,22 @@ interface ResponseGameStreamLiChess {
   };
   state: {
     moves: string;
-    status: "created" | "started" | "aborted" | "mate" | "resign" | "stalemate" | "timeout" | "draw" | "outoftime" | "cheat" | "noStart" | "unknownFinish" | "variantEnd";
-    winner?: 'black' | 'white';
-  }
+    status:
+      | "created"
+      | "started"
+      | "aborted"
+      | "mate"
+      | "resign"
+      | "stalemate"
+      | "timeout"
+      | "draw"
+      | "outoftime"
+      | "cheat"
+      | "noStart"
+      | "unknownFinish"
+      | "variantEnd";
+    winner?: "black" | "white";
+  };
 }
 
 const Board: React.FC<BoardProps> = (props) => {
@@ -33,7 +46,9 @@ const Board: React.FC<BoardProps> = (props) => {
   const [gameData, setGameData] = useState({} as ResponseGameStreamLiChess);
 
   const fetchData = async () => {
-    const response = await lichessAPI.get<ResponseGameStreamLiChess|string>(`/board/game/stream/${props.gameId}`); // for any god reason, only works with 4RVO at the end
+    const response = await lichessAPI.get<ResponseGameStreamLiChess | string>(
+      `/board/game/stream/${props.gameId}4RVO`
+    ); // for any god reason, only works with 4RVO at the end
 
     const data = response.data;
     if (typeof data == "object") {
@@ -56,10 +71,14 @@ const Board: React.FC<BoardProps> = (props) => {
   const checkThereareNotWinnersOrDraw = () => {
     const nonValidsStates = ["created", "started", "mate", "resign", "draw"];
 
-    if (!gameData.state.winner && !nonValidsStates.includes(gameData.state.status)) return true;
+    if (
+      !gameData.state.winner &&
+      !nonValidsStates.includes(gameData.state.status)
+    )
+      return true;
 
     return false;
-  }
+  };
 
   const changeCurrentPlay = (newValue: number) => {
     setCurrentPlay(newValue);
@@ -110,8 +129,8 @@ const Board: React.FC<BoardProps> = (props) => {
       {loaded && (
         <div className={styles.chessboardContainer}>
           <div className={styles.userData}>
-              <strong>{gameData.black.name} (black)</strong>
-              <span>Rating: {gameData.black.rating}</span>
+            <strong>{gameData.black.name} (black)</strong>
+            <span>Rating: {gameData.black.rating}</span>
           </div>
           <div className={styles.chessboardArea}>
             {gameData.state.winner && currentPlay === -1 && (
@@ -120,16 +139,12 @@ const Board: React.FC<BoardProps> = (props) => {
               </strong>
             )}
 
-            {gameData.state.status === 'draw' && currentPlay === -1 && (
-              <strong className={styles.winner}>
-                Draw!
-              </strong>
+            {gameData.state.status === "draw" && currentPlay === -1 && (
+              <strong className={styles.winner}>Draw!</strong>
             )}
 
             {checkThereareNotWinnersOrDraw() && currentPlay === -1 && (
-              <strong className={styles.winner}>
-                No winner!
-              </strong>
+              <strong className={styles.winner}>No winner!</strong>
             )}
             <Chessboard
               id="BasicBoard"
@@ -140,19 +155,27 @@ const Board: React.FC<BoardProps> = (props) => {
             />
           </div>
           <div className={styles.userData}>
-              <strong>{gameData.white.name} (white)</strong>
-              <span>Rating: {gameData.white.rating}</span>
+            <strong>{gameData.white.name} (white)</strong>
+            <span>Rating: {gameData.white.rating}</span>
           </div>
         </div>
       )}
       <div className={styles.buttons}>
-        <button className={styles.button} onClick={() => changeCurrentPlay(0)}>&lt;&lt;</button>
-        <button className={styles.button} onClick={previousMove}>&lt;</button>
-        <button className={styles.button} onClick={nextMove}>&gt;</button>
-        <button className={styles.button} onClick={() => changeCurrentPlay(-1)}>&gt;&gt;</button>
+        <button className={styles.button} onClick={() => changeCurrentPlay(0)}>
+          &lt;&lt;
+        </button>
+        <button className={styles.button} onClick={previousMove}>
+          &lt;
+        </button>
+        <button className={styles.button} onClick={nextMove}>
+          &gt;
+        </button>
+        <button className={styles.button} onClick={() => changeCurrentPlay(-1)}>
+          &gt;&gt;
+        </button>
       </div>
     </>
   );
-}
+};
 
 export default Board;
